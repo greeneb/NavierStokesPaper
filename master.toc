@@ -1,0 +1,9 @@
+\contentsline {section}{\numberline {1}History and Background}{2}{section.1}%
+\contentsline {section}{\numberline {2}Derivation}{2}{section.2}%
+\contentsline {section}{\numberline {3}Applications}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Newtonian Fluid}{6}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Incompressible Newtonian Fluid}{7}{subsubsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.2}Parallel and Radial Flow}{8}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Parallel Flow}{8}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Radial Flow}{8}{subsubsection.3.2.2}%
+\contentsline {section}{\numberline {4}Millennium Problem}{9}{section.4}%

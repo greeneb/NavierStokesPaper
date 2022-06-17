@@ -1,0 +1,135 @@
+\documentclass[12pt]{article}
+\input{/home/bagofusa/Documents/Math/Notes/preamble/preamble.tex}
+\usepackage{listings}
+\usepackage{setspace}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\title{The Navier-Stokes Equations}
+\author{Benjamin Greene}
+\doublespacing
+\begin{document}
+    \maketitle
+    \begin{abstract}
+        The \vocab{Navier-Stokes Equations} are a set of \vocab{partial differential equations} that describe \vocab{fluid flow}. In this paper, we review the history behind the equations, look at a derivation of the most general form of the equations, apply the general form to applications in \vocab{physics}, and discuss the \vocab{millennium problem} proposed by the Clay Mathematics Institute regarding solutions to these equations.
+    \end{abstract}
+    \tableofcontents
+    \section{History and Background}
+    Developed by \vocab{Claude-Louis Navier} and \vocab{George Gabriel Stokes}, the \vocab{Navier-Stokes equations} were developed between 1822 and 1850. The equations express key physical concepts relating to fluid flow including \vocab{conservation of momentum} and, for Newtonian fluids, \vocab{conservation of mass}. \\
+    The equations stem from combining Newton's second law with fluid motion to describe \vocab{viscous fluid flow}. They are closely related to \vocab{Euler's equations} for fluid flow; however, the Navier-Stokes equations provide a better model as they take into account viscosity while Euler's equations ``model only inviscid flow'' \cite{wiki}. \\
+    The wide range of variables that the Navier-Stokes equations take into account make them useful in a variety of practical uses including ``weather, ocean currents, water flow in a pipe, and air flow around a wing'' \cite{wiki}. These equations have many applications in science and engineering and are often used in conjunction with other equations in a diverse range of fields.
+    \section{Derivation}
+    When studying fluids, there are two primary ways to measure fluid flow: either we fix a reference point and study particles as they pass by or we fix a bit of fluid and follow it as it flows \cite{wikiderivation}.
+    \begin{definition}[Eulerian Derivative]
+        The \vocab{Eulerian derivative} of a field of fluids is defined as the operator $\pd{}{t}$. This operator measures the rate of change of an arbitrary fluid property at a \emph{fixed point} over time \cite{caltech}.
+    \end{definition}
+    \begin{definition}[Lagrangian Derivative]
+        The \vocab{Lagrangian derivative}, also referred to as the \vocab{material derivative} is defined as the operator $\frac{D}{Dt} := \pd{}{t}+\vec{u}\cdot\nabla$, where $\vec{u}$ is the \vocab{flow velocity} of a fluid \cite{wikiderivation}.
+    \end{definition}
+    \begin{remark}
+        Note that the Lagrangian derivative \emph{includes} the Eulerian derivative in its definition---this represents change at a point with respect to time whereas the second term, $\vec{u}\cdot\nabla$, represents change in a property with respect to position \cite{wikiderivation}.
+    \end{remark}
+    We will now shift to discuss an idea central to physics: \vocab{continuity}. Given an \vocab{intensive property} $\varphi$ (meaning the property is independent of the amount of material one has) defined on a fluid volume $\Omega$, we can write a general \vocab{continuity equation} representing a \vocab{conservation law} \cite{derivation}:
+    \[ \frac{d}{dt} \int_\Omega \varphi\;d\Omega=-\int_{\partial\Omega}\varphi\vec{v}\cdot\vec{n}-\int_\Omega s\;d\Omega. \]
+    The equation is made up of several integral terms, including
+    \begin{itemize}
+        \item The left hand side, $\frac{d}{dt}\int_\Omega \varphi\;d\Omega$, which represents the change in the property $\varphi$ over the volume $\Omega$,
+        \item  $\int_{\partial\Omega} \varphi\vec{v}\cdot\vec{n}$, which represents \vocab{flux} and describes how the property $\varphi$ flows over the \vocab{boundary} of the region, $\partial\Omega$.
+        \item  $\int_\Omega s\;d\Omega$, which describes how the property $\varphi$ leaves the volume due to \vocab{sinks} and/or \vocab{sources} within the volume \cite{derivation}.
+    \end{itemize}
+    This equation, a consequence of \vocab{Reynold's Transport Theorem}, emphasizes a key idea:
+    \begin{idea}
+        ``The change in the total amount of a property is due to how much flows out through the volume boundary as well as how much is lost or gained through sources or sinks inside the boundary'' \cite{derivation}.
+    \end{idea}
+    We can apply the \vocab{divergence theorem} to the surface integral on the right hand side, allowing us to express it as a volume integral \cite{wikiderivation}:
+    \begin{align*}
+        \frac{d}{dt}\int_\Omega \varphi\;d\omega &=-\int_\Omega \nabla \cdot(\varphi\vec{u})\;d\Omega-\int_\Omega s\;d\Omega. \\
+    \int_\Omega \pd{\varphi}{t}\;d\Omega &= -\int_\Omega (\nabla \cdot(\varphi\vec{u})+s)\;d\Omega \\
+                                         &\implies \int_\Omega \left(\pd{\varphi}{t}+\nabla\cdot(\varphi\vec{u})+s\right)\;d\Omega =0\\
+                                         &\implies \pd{\varphi}{t}+\nabla \cdot(\varphi\vec{u})+s=0
+    .\end{align*}
+    \begin{example}[Conservation of Mass]
+        Beginning with our general conservation equation $\pd{\varphi}{t}+\nabla \cdot(\varphi\vec{u})+s=0$, we can substitute in $\varphi=\rho$, where $\rho$ represents density, to get $\pd{\rho}{t}+\nabla \cdot(\rho\vec{v})+s=0$. Since our volume $\Omega$ is constant, $s=0$, so we get
+        \[ \pd{\rho}{t}+\nabla \cdot(\rho\vec{v})=0, \]
+        which represents \vocab{conservation of mass}. This equation ususally accompanies the Navier-Stokes equations as context \cite{wikiderivation}.
+    \end{example}
+    We now have all the ingredients necessary to derive the Navier-Stokes equations. Beginning with Newton's Second Law, $\sum \vec{F}=m\vec{a}$, we replace  $\vec{F}=\vec{b}$ to represent the \vocab{body force} on a particle and substitute density for mass because we are dealing with individual particles \cite{derivation}:
+    \begin{align*}
+        \vec{F}&=m\vec{a}\\
+        \vec{b}&=\rho \frac{d}{dt} \vec{v}(x,y,z,t) \\
+               &= \rho\left(\pd{\vec{v}}{t}+\pd{\vec{v}}{x}\pd{x}{t}+\pd{\vec{v}}{y}\pd{y}{t}+\pd{\vec{v}}{z}\pd{z}{t}\right) \\
+               &= \rho\left(\pd{\vec{v}}{t}+\vec{v}\cdot\nabla \vec{v}\right) \\
+               &= \rho \frac{D\vec{v}}{Dt}
+    .\end{align*}
+    We can then look at the body force on fluid particles, which we notice is made up of two components: \vocab{fluid stresses} that act on the individual particles and \vocab{external forces} that act on the fluid as a whole, so $\vec{b}=\nabla \cdot \sigma +\vec{f}$, where $\sigma$ represents the \vocab{stress tensor} of the fluid and $ \vec{f}$ represents external forces \cite{derivation}.
+    \begin{abuse}[Tensors]
+        \vocab{Tensors} are a type of \vocab{generalized matrix} in $n$ dimensions; however, for our use, we can use a 3 $\times$ 3 matrix to represent the stress tensor.
+    \end{abuse}
+    We write
+    \[ \sigma = \begin{pmatrix} \sigma_{x x} & \tau_{xy} & \tau_{xz} \\ \tau_{yx} & \sigma_{yy} & \tau_{yz} \\ \tau_{zx} & \tau_{zy} & \sigma_{zz} \end{pmatrix} = -\begin{pmatrix} p & 0 & 0 \\ 0 & p & 0 \\ 0 & 0 & p \end{pmatrix} + \begin{pmatrix} \sigma_{x x}+p & \tau_{xy} & \tau_{xz} \\ \tau_{yx} & \sigma_{yy}+p & \tau_{yz} \\ \tau_{zx} & \tau_{zy} & \sigma_{zz}+p \end{pmatrix} = -p\vec{I}+\vec{\tau} \] 
+    to represent the stress tensor, where $\sigma$ are the \vocab{normal stresses} on our fluid particle and $\tau$ are the \vocab{shear stresses}. \\
+    Combining equations from earlier, we get
+    \begin{align*}
+        \rho \frac{D\vec{v}}{Dt} &=\vec{b} \\
+                                 &= \nabla \cdot \sigma+\vec{f} \\
+                                 &= -\nabla p+\nabla \cdot\vec{\tau}+\vec{f}
+    .\end{align*}
+    This gives us the most general form of the Navier-Stokes Equation \cite{wikiderivation}:
+    \[ \rho \frac{D\vec{v}}{Dt}=-\nabla p+\nabla \cdot \vec{\tau}+\vec{f}. \] 
+    Where
+    \begin{itemize}
+        \item $-\nabla p$ is the \vocab{volumetric stress tensor}; it represents pressure and prevents motion due to normal stresses;
+        \item $\nabla \cdot \vec{\tau}$ is the \vocab{stress deviator tensor} which causes motion due to horizontal friction and shear stress---equivalently turbulence within the fluid; and
+        \item $\vec{f}$ is the \vocab{external force} acting on the fluid as a whole, usually gravity \cite{derivation}.
+    \end{itemize}
+    \section{Applications}
+    Though it looks fancy, our general form of the Navier-Stokes Equation doesn't have any specific uses. Through specified values and expressions for the various tensors and forces, we can adapt our equation to model specific varieties of fluids.
+    \subsection{Newtonian Fluid}
+    Newton studied a certain set of fluids with which he observed the defining charactaristic that $\tau\propto\pd{u}{y}$, stated in \vocab{Newton's Law of Viscosity}.
+    \begin{corollary}
+        Stokes, when formalizing the Navier-Stokes Equations, made the following three assumptions as a consequence of Newton's observation:
+        \begin{itemize}
+            \item The stress tensor is a linear function of the \vocab{velocity gradient};
+            \item The fluid is \vocab{isotropic}---essentially meaning it acts symmetrically in all orientations; and
+            \item $\nabla \cdot\vec{\tau}=0$ for fluids at rest \cite{wikiderivation}.
+        \end{itemize}
+        These assumptions led Stokes to derive an expression $\vec{\tau}=\mu\left( \nabla \vec{u}+(\nabla \vec{u})^T \right) +\lambda(\nabla \cdot\vec{u})\vec{I}$, where $\mu$ represents \vocab{shear viscosity} and $\lambda$ represents \vocab{volume viscosity}. 
+    \end{corollary}
+
+    We now begin with the general form of the Navier-Stokes Equation, replacing  $\vec{f}=\rho\vec{g}$ to indicate that gravity is the only external force acting on our fluid:
+    \begin{align*}
+        \rho\left( \pd{\vec{u}}{t}+\vec{u}\cdot\nabla \vec{u} \right) &=-\nabla p+\nabla\cdot\vec{\tau}+\rho\vec{g} \\
+        \intertext{Substituting in Stokes' expression for $\vec{\tau}$, we get}
+        \rho\left( \pd{\vec{u}}{t}+\vec{u}\cdot\nabla \vec{u} \right) &= -\nabla p+\nabla \cdot\left[ \mu\left( \nabla \vec{u}+(\nabla\vec{u})^T \right) \right]+\nabla \cdot\left[ \lambda(\nabla \cdot\vec{u})\vec{I} \right]+\rho\vec{g}
+    .\end{align*}
+    The associated mass continuity equation from earlier holds: $\pd{\rho}{t}+\nabla \cdot(\rho\vec{v})=0$.
+    \subsubsection{Incompressible Newtonian Fluid}
+    Now we make another assumption that our fluids are \vocab{incompressible}, meaning
+    \begin{itemize}
+        \item shear viscosity $\mu$ will be constant,
+        \item volume viscosity $\lambda=0$, and
+        \item the mass continuity equation simplifies to $\nabla \cdot \vec{u}=0$.
+    \end{itemize}
+    This allows us to simplify our equation to
+    \begin{align*}
+        \rho\left( \pd{\vec{u}}{t}+\vec{u}\cdot\nabla \vec{u}\right)&= -\nabla p+\nabla \cdot\left[\mu\left( \nabla \vec{u}+(\nabla \vec{u})^T \right)\right] +\rho\vec{g}
+    .\end{align*}
+    However, the stress deviator tensor term simplifies nicely to a vector Laplacian: $\nabla \cdot \vec{\tau}=\mu\nabla ^2\vec{u}$, giving us a final equation
+    \[ \rho \frac{D\vec{u}}{Dt}=\rho\left( \pd{\vec{u}}{t}+\vec{u}\cdot\nabla \vec{u} \right) =-\nabla p+\mu\nabla ^2\vec{u}+\rho\vec{g}. \] 
+    \subsection{Parallel and Radial Flow}
+    The Navier-Stokes equations are easily applied to real-world problems regarding \vocab{fluid flow}. Two such examples are parallel and radial flow.
+    \subsubsection{Parallel Flow}
+    Given fluid flowing between parallel plates, we can use describe a \vocab{boundary value problem} which models the situation: $\frac{d^2u}{dy^2}=-1;\; u(0)=u(1)=0$. This can be easily solved to find $u(y)=\frac{y-y^2}{2}$. This expression for $u(y)$ allows us to then use the Navier-Stokes equations to analytically obtain other measurements such as ``viscous drag force or net flow rate'' \cite{wiki}.
+    \subsubsection{Radial Flow}
+    A more complex yet still feasible problem is radial flow between parallel plates, which can be represented by the \vocab{ordinary differential eqation} $\frac{d^2f}{dz^2}+Rf^2=-1;\;f(-1)=f(1)=0$, where $R$ is a chosen \vocab{Reynolds number} (a constant relating to laminar fluid flow) \cite{wiki}.
+    \section{Millennium Problem}
+    Perhaps the biggest testimony to the importance of the Navier-Stokes Equations is their inclusion in the Clay Mathematics Institute's \vocab{Millennium Prize Problems}. This set of seven problems were established in 2000 as an outline for mathematics for the coming century. According to the Institute itself, ``Mathematicians and physicists believe that an explanation for and the prediction of both the breeze and the turbulence can be found through an understanding of solutions to the Navier-Stokes equations'' \cite{clay}. The challenge set forth by the Institute is to prove or disprove the \vocab{existence} and \vocab{smoothness} of solutions to the Navier-Stokes equations---that is, to prove ``whether smooth solutions always exist in three dimensions---i.e. they are infinitely differentiable (or even just bounded) at all points in the domain'' \cite{wiki}.
+    \begin{thebibliography}{5}
+        \bibitem[Gibanksy]{derivation} Gibanksy, A. (2011, May 7). \emph{Fluid Dynamics: The Navier-Stokes Equations}. \url{https://andrew.gibiansky.com/blog/physics/fluid-dynamics-the-navier-stokes-equations/}
+        \bibitem[Navier-Stokes]{wiki} Navier–Stokes equations. (2022, May 23). In \emph{Wikipedia}. \url{https://en.wikipedia.org/w/index.php?title=Navier%E2%80%93Stokes_equations&oldid=1089380514}
+        \bibitem[Derivation]{wikiderivation} Derivation of the Navier–Stokes equations. (2022, March 18). In \emph{Wikipedia}. \url{https://en.wikipedia.org/w/index.php?title=Derivation_of_the_Navier%E2%80%93Stokes_equations&oldid=1077823214}
+            \bibitem[Brennen]{caltech} Brennen, C. E. (n.d.). \emph{Lagrangian and Eulerian Time Derivatives}. California Institute of Technology. Retrieved May 23, 2022, from \url{http://www.brennen.caltech.edu/fluidbook/basicfluiddynamics/descriptions/accelerations.pdf}
+            \bibitem[Navier-Stokes Equation]{clay} \emph{Navier–Stokes Equation} | \emph{Clay Mathematics Institute}. (n.d.). Clay Mathematics Institute. Retrieved May 23, 2022, from \url{http://www.claymath.org/millennium-problems/navier%E2%80%93stokes-equation}
+    \end{thebibliography}
+\end{document}
+%  ~ Palette ~
+% Environments: idea, question, exercise, remark, remark*, step, claim, definition, fact, abuse (of notation), theorem, lemma, proposition, corollary, example, soln, parlist, gobble, example
+% Commands: \todo, \vocab, \hrulebar, \catname, \listhack
